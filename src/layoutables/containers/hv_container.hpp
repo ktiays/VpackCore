@@ -10,16 +10,28 @@
 
 namespace vpk::detail {
 
-template<typename ValueType>
-struct AxisSize {
-    ValueType main;
-    ValueType cross;
-
-    constexpr AxisSize() = default;
-
-    constexpr AxisSize(const ValueType& main, const ValueType& cross)
-        : main(main), cross(cross) {}
+enum class AxisAlignment {
+    start,
+    center,
+    end
 };
+
+#define AXIS_STRUCT_DECL(struct_type) \
+template<typename ValueType>          \
+struct Axis##struct_type {            \
+    ValueType main;                   \
+    ValueType cross;                  \
+                                      \
+    constexpr Axis##struct_type()     \
+        : main(0), cross(0) {}        \
+                                      \
+    constexpr Axis##struct_type(const ValueType& main, const ValueType& cross) \
+        : main(main), cross(cross) {} \
+}
+
+AXIS_STRUCT_DECL(Point);
+
+AXIS_STRUCT_DECL(Size);
 
 template<typename ValueType>
 struct AxisEdgeInsets {
@@ -28,16 +40,19 @@ struct AxisEdgeInsets {
     ValueType cross_start;
     ValueType cross_end;
 
-    constexpr AxisEdgeInsets() = default;
+    constexpr AxisEdgeInsets()
+        : main_start(0), main_end(0), cross_start(0), cross_end(0) {}
 
     constexpr AxisEdgeInsets(const ValueType& main_start, const ValueType& main_end, const ValueType& cross_start,
                              const ValueType& cross_end)
         : main_start(main_start), main_end(main_end), cross_start(cross_start), cross_end(cross_end) {}
 
+    /// The total insets in the main axis direction.
     ValueType main() const {
         return main_start + main_end;
     }
 
+    /// The total insets in the cross axis direction.
     ValueType cross() const {
         return cross_start + cross_end;
     }
@@ -45,6 +60,10 @@ struct AxisEdgeInsets {
 
 template<typename Identifier, typename ValueType>
 struct HVContainer : public vpk::Container<Identifier, ValueType> {
+    HVContainer(const std::vector<LayoutablePointer<Identifier, ValueType>>& items,
+                const LayoutParams<ValueType>& params)
+        : vpk::Container<Identifier, ValueType>(items, params) {}
+
 protected:
     using Element = LayoutablePointer<Identifier, ValueType>;
 
@@ -67,28 +86,39 @@ protected:
 
     virtual ValueType max_cross_for_element(Element element) const = 0;
 
-    virtual SizeType axis_measure_for_element(Element element, const SizeType& size) const = 0;
+    /// The alignment of the container on the main axis.
+    virtual AxisAlignment axis_alignment() const = 0;
 
-    /// \brief Abstract measure method for horizontal and vertical containers.
+    virtual Point<ValueType> point_from_axis_point(const AxisPoint<ValueType>& point) const = 0;
+
+    virtual AxisPoint<ValueType> axis_point_from_point(const Point<ValueType>& point) const = 0;
+
+    /// Convert from cross-axis size to regular size.
     ///
-    /// The calculation process does not care about the layout direction of the actual container.
-    /// It uses only the main axis and the cross axis as base for the calculation.
+    /// This method needs to be implemented by a subclass.
+    /// \param size A cross-axis based size.
+    /// \return A regular size.
+    virtual Size<ValueType> size_from_axis_size(const SizeType& size) const = 0;
+
+    /// Convert from regular size to cross-axis size.
     ///
-    /// \param size The size of the container provided.
-    /// \param size_handler Callback when the element size calculation is done.
-    /// \return The total size to be occupied by all elements in the container.
-    SizeType axis_measure(const SizeType& size,
-                          std::function<SizeType(const SizeType&)>&& size_handler) const;
+    /// This method needs to be implemented by a subclass.
+    /// \param size A regular size.
+    /// \return A cross-axis based size.
+    virtual SizeType axis_size_from_size(const Size<ValueType>& size) const = 0;
+
+    void layout(const Rect<ValueType>& frame, LayoutResult<Identifier, ValueType>& result) const override;
+
+    Size<ValueType> measure(const Size<ValueType>& size) override;
 };
 
 template<typename Identifier, typename ValueType>
-AxisSize<ValueType>
-HVContainer<Identifier, ValueType>::axis_measure(const AxisSize<ValueType>& size,
-                                                 std::function<SizeType(const SizeType&)>&& size_handler) const {
+Size<ValueType> HVContainer<Identifier, ValueType>::measure(const Size<ValueType>& origin_size) {
+    const SizeType size = axis_size_from_size(origin_size);
     SizeType measured_size;
 
     using usize = typename decltype(this->children)::size_type;
-    /// A map to record the width allocation of each element.
+    /// A map to record the main axis allocation of each element.
     std::unordered_map<usize, ValueType> main_map;
     std::vector<std::pair<usize, ValueType>> maximum_main_list;
     maximum_main_list.reserve(this->children.size());
@@ -98,10 +128,12 @@ HVContainer<Identifier, ValueType>::axis_measure(const AxisSize<ValueType>& size
     }
 
     // Sort the elements in ascending order by the maximum space required.
-    std::sort(maximum_main_list.begin(), maximum_main_list.end(), [](const auto& a, const auto& b) {
-        return a.second < b.second;
-    });
-
+    std::sort(
+        maximum_main_list.begin(), maximum_main_list.end(),
+        [](const auto& a, const auto& b) {
+            return a.second < b.second;
+        }
+    );
     const usize list_count = maximum_main_list.size();
     for (auto it: makeIndexed(maximum_main_list)) {
         const usize index = it.index();
@@ -117,27 +149,89 @@ HVContainer<Identifier, ValueType>::axis_measure(const AxisSize<ValueType>& size
         const auto child = this->children[element_idx];
         const AxisEdgeInsets<ValueType> padding = axis_edge_insets_for_element(child);
         // Make the element size with the maximum space of available containers.
-        const SizeType item_size = axis_measure_for_element(
-            child,
+        const SizeType item_size = axis_size_from_size(child->measure(size_from_axis_size(
             {
                 std::min(maximum_container_main - padding.main(),
                          max_main_for_element(child)),
                 std::min(size.cross - padding.cross(),
                          max_cross_for_element(child))
             }
-        );
+        )));
+
         // Size limit on the calculation result.
         const ValueType main = std::max(min_main_for_element(child),
                                         std::min(item_size.main, maximum_container_main - padding.main()));
         const ValueType cross = std::max(min_cross_for_element(child),
                                          std::min(item_size.cross, size.cross - padding.cross()));
+        // The size of the element after subtracting padding is the actual size of the element.
+        this->size_list.at(element_idx) = size_from_axis_size({ main, cross });
         // The padding needs to be taken into account when counting the actual size of the occupancy.
         measured_size.main += (main + padding.main());
         measured_size.cross = std::max(measured_size.cross, cross + padding.cross());
     }
 
-    return measured_size;
+    this->cached_measured_size = size_from_axis_size(measured_size);
+    return this->cached_measured_size;
 }
+
+template<typename Identifier, typename ValueType>
+void HVContainer<Identifier, ValueType>::layout(const Rect<ValueType>& frame,
+                                                LayoutResult<Identifier, ValueType>& result) const {
+    // Layout in terms of the actual space occupied by the elements.
+    const AxisPoint<ValueType> origin = axis_point_from_point(
+        {
+            frame.x +
+            (frame.width - this->cached_measured_size.width) / 2,
+            frame.y +
+            (frame.height - this->cached_measured_size.height) / 2
+        }
+    );
+    const AxisSize<ValueType> size = axis_size_from_size(
+        {
+            std::max(frame.width, this->cached_measured_size.width),
+            std::max(frame.height, this->cached_measured_size.height)
+        }
+    );
+
+    ValueType used_main = 0;
+    for (int i = 0; i < this->children.size(); ++i) {
+        const auto child_ptr = this->children[i];
+
+        const auto item_size = axis_size_from_size(this->size_list[i]);
+        const auto item_padding = axis_edge_insets_for_element(child_ptr);
+        /// The total size of the accommodating elements.
+        ///
+        /// The actual size of the element plus the element's own padding.
+        const SizeType item_container_size = {
+            item_size.main + item_padding.main(),
+            item_size.cross + item_padding.cross()
+        };
+        // The container allows to specify its alignment on the cross axis,
+        // so there will be an offset on the cross axis.
+        const auto cross_offset = [this, &size, &item_container_size]() -> ValueType {
+            switch (this->axis_alignment()) {
+                case AxisAlignment::start:
+                    return 0;
+                case AxisAlignment::center:
+                    return (size.cross - item_container_size.cross) / 2;
+                case AxisAlignment::end:
+                    return size.cross - item_container_size.cross;
+            }
+        }();
+        const auto item_offset = axis_point_from_point(child_ptr->offset());
+        const auto layout_frame_for_child = Rect<ValueType>(
+            point_from_axis_point(
+                { origin.main + used_main + item_offset.main + item_padding.main_start,
+                  origin.cross + cross_offset + item_offset.cross + item_padding.cross_start }
+            ),
+            size_from_axis_size(item_size)
+        );
+        child_ptr->layout(layout_frame_for_child, result);
+        used_main += item_container_size.main;
+    }
+}
+
+#undef AXIS_STRUCT_DECL
 
 }
 
