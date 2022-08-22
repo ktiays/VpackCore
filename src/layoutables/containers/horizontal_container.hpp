@@ -8,13 +8,13 @@
 
 #include <algorithm>
 
-#include "container.hpp"
+#include "hv_container.hpp"
 #include "../../types.hpp"
 
 namespace vpk {
 
 template<typename Identifier, typename ValueType>
-class HorizontalContainer : public Container<Identifier, ValueType> {
+class HorizontalContainer : public detail::HVContainer<Identifier, ValueType> {
 public:
     HorizontalContainer(const std::vector<LayoutablePointer<Identifier, ValueType>>& children,
                         const LayoutParams<ValueType>& params, VerticalAlignment align)

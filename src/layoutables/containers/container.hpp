@@ -25,9 +25,6 @@ else this->property##_ = calculate_min_max_dimension<SizeExtractor::property, Id
 namespace vpk {
 
 template<typename Identifier, typename ValueType>
-struct HVLayoutProxy;
-
-template<typename Identifier, typename ValueType>
 class Container : public Layoutable<Identifier, ValueType> {
 public:
     Container(const std::vector<LayoutablePointer<Identifier, ValueType>>& items, const LayoutParams<ValueType>& params)
@@ -38,8 +35,6 @@ public:
     LayoutType type() const override { return LayoutType::container; }
 
 protected:
-    friend struct HVLayoutProxy<Identifier, ValueType>;
-
     std::vector<LayoutablePointer<Identifier, ValueType>> children;
     // The size list of the element calculated by the cache.
     // The size indicates the actual display size of the element, i.e., the size without padding.

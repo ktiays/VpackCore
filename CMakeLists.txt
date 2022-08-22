@@ -22,6 +22,6 @@ add_library(VpackCore
         VpackCore.hpp
         tests/src/view.hpp
         tests/src/container.hpp
-        tests/src/some_view.hpp src/layoutables/utils/math.hpp)
+        tests/src/some_view.hpp src/layoutables/utils/math.hpp src/layoutables/containers/hv_container.hpp)
 
 add_subdirectory(tests)
