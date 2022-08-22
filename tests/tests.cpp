@@ -69,6 +69,29 @@ TEST(VpackCoreTest, HorizontalText) {
     ASSERT_EQ(result, answer);
 }
 
+TEST(VpackCoreTest, VerticalContainer) {
+    const auto result = vpkt::VStack{
+        {
+            vpkt::View("A", { 20, 20 }).make_view(),
+            vpkt::View("B", { 10, 60 }).make_view(),
+            vpkt::View("C", { 100, 100 })
+                .offset({ 1, 1 })
+                .make_view(),
+        }
+    }.alignment(vpk::HorizontalAlignment::trailing)
+        .compute({ 0, 0, 200, 200 });
+
+    const LayoutResult answer{
+        {
+            { "A", {{ 130, 10, 20, 20 }, 0 }},
+            { "B", {{ 140, 30, 10, 60 }, 0 }},
+            { "C", {{ 51, 91, 100, 100 }, 0 }},
+        }, 0
+    };
+
+    ASSERT_EQ(result, answer);
+}
+
 TEST(VpackCoreTest, StackContainer) {
     const auto result = vpkt::ZStack{
         {
