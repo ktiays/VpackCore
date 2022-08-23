@@ -16,7 +16,7 @@ enum class AxisAlignment {
     end
 };
 
-#define AXIS_STRUCT_DECL(struct_type) \
+#define __AXIS_STRUCT_DECL(struct_type) \
 template<typename ValueType>          \
 struct Axis##struct_type {            \
     ValueType main;                   \
@@ -29,9 +29,9 @@ struct Axis##struct_type {            \
         : main(main), cross(cross) {} \
 }
 
-AXIS_STRUCT_DECL(Point);
+__AXIS_STRUCT_DECL(Point);
 
-AXIS_STRUCT_DECL(Size);
+__AXIS_STRUCT_DECL(Size);
 
 template<typename ValueType>
 struct AxisEdgeInsets {
@@ -89,8 +89,18 @@ protected:
     /// The alignment of the container on the main axis.
     virtual AxisAlignment axis_alignment() const = 0;
 
+    /// Convert from cross-axis point to regular point.
+    ///
+    /// This method needs to be implemented by a subclass.
+    /// \param point A cross-axis based point.
+    /// \return A regular point.
     virtual Point<ValueType> point_from_axis_point(const AxisPoint<ValueType>& point) const = 0;
 
+    /// Convert from regular point to cross-axis point.
+    ///
+    /// This method needs to be implemented by a subclass.
+    /// \param point A regular point.
+    /// \return A cross-axis based point.
     virtual AxisPoint<ValueType> axis_point_from_point(const Point<ValueType>& point) const = 0;
 
     /// Convert from cross-axis size to regular size.
@@ -231,7 +241,7 @@ void HVContainer<Identifier, ValueType>::layout(const Rect<ValueType>& frame,
     }
 }
 
-#undef AXIS_STRUCT_DECL
+#undef __AXIS_STRUCT_DECL
 
 }
 
