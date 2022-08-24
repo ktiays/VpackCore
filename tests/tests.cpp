@@ -72,20 +72,23 @@ TEST(VpackCoreTest, HorizontalText) {
 TEST(VpackCoreTest, VerticalContainer) {
     const auto result = vpkt::VStack{
         {
-            vpkt::View("A", { 20, 20 }).make_view(),
-            vpkt::View("B", { 10, 60 }).make_view(),
-            vpkt::View("C", { 100, 100 })
-                .offset({ 1, 1 })
+            vpkt::View("A", { 100, 40 }).make_view(),
+            vpkt::View("B", { 320, 70 }).make_view(),
+            vpkt::View("C", { 80, 274 })
+                .offset({ 2, 2 })
                 .make_view(),
+            vpkt::View("D", { 100, 40 }).make_view(),
+            vpkt::Spacer().make_view(),
         }
     }.alignment(vpk::HorizontalAlignment::trailing)
-        .compute({ 0, 0, 200, 200 });
+        .compute({ 0, 0, 350, 500 });
 
     const LayoutResult answer{
         {
-            { "A", {{ 130, 10, 20, 20 }, 0 }},
-            { "B", {{ 140, 30, 10, 60 }, 0 }},
-            { "C", {{ 51, 91, 100, 100 }, 0 }},
+            { "A", {{ 250, 0, 100, 40 }, 0 }},
+            { "B", {{ 30, 40, 320, 70 }, 0 }},
+            { "C", {{ 272, 112, 80, 274 }, 0 }},
+            { "D", {{ 250, 384, 100, 40 }, 0 }},
         }, 0
     };
 
