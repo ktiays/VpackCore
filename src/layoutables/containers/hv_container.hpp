@@ -17,16 +17,16 @@ enum class AxisAlignment {
 };
 
 #define __AXIS_STRUCT_DECL(struct_type) \
-template<typename ValueType>          \
-struct Axis##struct_type {            \
-    ValueType main;                   \
-    ValueType cross;                  \
-                                      \
-    constexpr Axis##struct_type()     \
-        : main(0), cross(0) {}        \
-                                      \
+template<typename ValueType>            \
+struct Axis##struct_type {              \
+    ValueType main;                     \
+    ValueType cross;                    \
+                                        \
+    constexpr Axis##struct_type()       \
+        : main(0), cross(0) {}          \
+                                        \
     constexpr Axis##struct_type(const ValueType& main, const ValueType& cross) \
-        : main(main), cross(cross) {} \
+        : main(main), cross(cross) {}   \
 }
 
 __AXIS_STRUCT_DECL(Point);

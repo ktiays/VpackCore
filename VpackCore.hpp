@@ -16,5 +16,6 @@
 #include "src/layoutables/containers/horizontal_container.hpp"
 #include "src/layoutables/containers/vertical_container.hpp"
 #include "src/layoutables/containers/stack_container.hpp"
+#include "src/layoutables/containers/decorated_container.hpp"
 
 #endif //VPACKCORE_VPACKCORE_HPP

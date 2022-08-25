@@ -118,3 +118,37 @@ TEST(VpackCoreTest, StackContainer) {
 
     ASSERT_EQ(result, answer);
 }
+
+TEST(VpackCoreTest, DecoratedContainer) {
+    const auto result = vpkt::HStack(
+        {
+            vpkt::DStack(
+                {
+                    vpkt::InfView("Background").make_view(),
+                    vpkt::Text("Text", 10)
+                        .padding({ 12, 6, 12, 6 })
+                        .make_view(),
+                }, vpk::DecoratedStyle::background).make_view(),
+            vpkt::Spacer().make_view(),
+            vpkt::DStack(
+                {
+                    vpkt::View("View", { 50, 50 })
+                        .padding({ 5, 5, 5, 5 })
+                        .make_view(),
+                    vpkt::View("Overlay", { 70, 70 }).make_view(),
+                }, vpk::DecoratedStyle::overlay
+            ).make_view(),
+        }
+    ).compute({ 0, 0, 200, 120 });
+
+    const LayoutResult answer{
+        {
+            { "Text", {{ 12, 56, 50, 8 }, 2 }},
+            { "Background", {{ 0, 29, 74, 20 }, 1 }},
+            { "View", {{ 145, 35, 50, 50 }, 3 }},
+            { "Overlay", {{ 135, 25, 70, 70 }, 4 }},
+        }, 4
+    };
+
+    ASSERT_EQ(result, answer);
+}
