@@ -16,7 +16,8 @@
 namespace vpkt {
 
 template<typename T = decltype(std::declval<SomeView>().make_view())>
-struct VStack : public SomeView {
+class VStack : public SomeView {
+public:
     VStack(std::vector<T>&& v)
         : items_(std::move(v)), alignment_(vpk::HorizontalAlignment::center) {}
 
@@ -46,7 +47,8 @@ private:
 namespace vpkt {
 
 template<typename T = decltype(std::declval<SomeView>().make_view())>
-struct HStack : public SomeView {
+class HStack : public SomeView {
+public:
     HStack(std::vector<T>&& v)
         : items_(std::move(v)), alignment_(vpk::VerticalAlignment::center) {}
 
@@ -78,7 +80,8 @@ private:
 namespace vpkt {
 
 template<typename T = decltype(std::declval<SomeView>().make_view())>
-struct ZStack : public SomeView {
+class ZStack : public SomeView {
+public:
     ZStack(std::vector<T>&& v)
         : items_(std::move(v)), alignment_(vpk::Alignment::center) {}
 
@@ -98,6 +101,30 @@ struct ZStack : public SomeView {
 private:
     std::vector<T> items_;
     vpk::Alignment alignment_;
+    __DECL_LAYOUT_PARAMS;
+};
+
+}
+
+namespace vpkt {
+
+template<typename T = decltype(std::declval<SomeView>().make_view())>
+class DStack : public SomeView {
+public:
+    DStack(std::vector<T>&& v, vpk::DecoratedStyle style)
+        : items_(v), style_(style) {}
+
+    __IMPL_LAYOUT_PARAMS_FOR_CONTAINER(DStack)
+
+    T make_view() const override {
+        return std::make_shared<vpk::DecoratedContainer<identifier_t, value_type>>(
+            items_, vpk::LayoutParams<double>{}, style_
+        );
+    }
+
+private:
+    std::vector<T> items_;
+    vpk::DecoratedStyle style_;
     __DECL_LAYOUT_PARAMS;
 };
 

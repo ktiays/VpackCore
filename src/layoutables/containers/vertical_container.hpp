@@ -26,8 +26,6 @@ public:
         __DEAL_MAX_HEIGHT_FOR_POLICY(MinMaxPolicy::sum);
     }
 
-    HorizontalAlignment alignment;
-
     using Element = typename detail::HVContainer<Identifier, ValueType>::Element;
 
     detail::AxisEdgeInsets<ValueType> axis_edge_insets_for_element(Element element) const override {
@@ -69,6 +67,9 @@ public:
                 return detail::AxisAlignment::end;
         }
     }
+
+private:
+    HorizontalAlignment alignment;
 
 };
 

@@ -13,9 +13,12 @@
 #include "../../utils/indexed.hpp"
 #include "../utils/size_extractor.hpp"
 
-#define __DEAL_SIZE_FOR_POLICY_WITH_PROPERTY(property, policy) \
+#define __DEAL_MIN_WIDTH_ELSE(property) \
 if (size_property.property.has_value()) this->property##_ = *size_property.property; \
-else this->property##_ = calculate_min_max_dimension<SizeExtractor::property, Identifier, ValueType>(children, policy)
+else this->property##_ =
+
+#define __DEAL_SIZE_FOR_POLICY_WITH_PROPERTY(property, policy) \
+__DEAL_MIN_WIDTH_ELSE(property) calculate_min_max_dimension<SizeExtractor::property, Identifier, ValueType>(children, policy)
 
 #define __DEAL_MIN_WIDTH_FOR_POLICY(policy) __DEAL_SIZE_FOR_POLICY_WITH_PROPERTY(min_width, policy)
 #define __DEAL_MAX_WIDTH_FOR_POLICY(policy) __DEAL_SIZE_FOR_POLICY_WITH_PROPERTY(max_width, policy)

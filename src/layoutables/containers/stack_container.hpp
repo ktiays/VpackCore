@@ -27,11 +27,12 @@ public:
         __DEAL_MAX_HEIGHT_FOR_POLICY(MinMaxPolicy::max);
     }
 
-    Alignment alignment;
-
     void layout(const Rect<ValueType>& frame, LayoutResult<Identifier, ValueType>& result) const override;
 
     Size<ValueType> measure(const Size<ValueType>& size) override;
+
+private:
+    Alignment alignment;
 };
 
 template<typename Identifier, typename ValueType>
@@ -120,10 +121,7 @@ Size<ValueType> StackContainer<Identifier, ValueType>::measure(const Size<ValueT
     }
 
     this->cached_measured_size = measured_size;
-    return Size<ValueType>{
-        std::min(std::max(measured_size.width, this->min_width()), this->max_width()),
-        std::min(std::max(measured_size.height, this->min_height()), this->max_height()),
-    };
+    return measured_size;
 }
 
 }

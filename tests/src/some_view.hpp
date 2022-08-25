@@ -43,6 +43,8 @@ __IMPL_OFFSET_FOR_CONTAINER(container)
 
 namespace vpkt {
 
+const double infinity = std::numeric_limits<double>::infinity();
+
 static std::string spacer_identifier() {
     return "__spacer";
 }

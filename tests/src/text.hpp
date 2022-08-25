@@ -12,7 +12,8 @@
 
 namespace vpkt {
 
-struct Text : public SomeView {
+class Text : public SomeView {
+public:
     Text(identifier_t&& identifier, int length)
         : identifier_(std::move(identifier)), text_length_(length) {}
 

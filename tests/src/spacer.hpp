@@ -19,7 +19,7 @@ struct Spacer : public SomeView {
     vpk::LayoutablePointer<identifier_t, value_type> make_view() const override {
         const vpk::LayoutParams<value_type> params{
             {
-                0, 0, std::numeric_limits<value_type>::infinity(), std::numeric_limits<value_type>::infinity()
+                0, 0, infinity, infinity
             },
             {},
             {}};
