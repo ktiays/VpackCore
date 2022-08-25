@@ -47,13 +47,13 @@ public:
         });
 
         optional<int> current_priority = nullopt;
-        typename decltype(children_map)::mapped_type* current_elements_ptr = nullptr;
+        typename decltype(children_priority_map)::mapped_type* current_elements_ptr = nullptr;
         for (auto it: makeIndexed(copied_items)) {
             const ElementPointer& ptr = it.value();
             const int priority = ptr->params.priority;
             if (!current_priority.has_value() || *current_priority != priority) {
                 current_priority = priority;
-                current_elements_ptr = &children_map[priority];
+                current_elements_ptr = &children_priority_map[priority];
             }
             current_elements_ptr->push_back(std::make_pair(it.index(), ptr));
         }
@@ -63,7 +63,7 @@ public:
 
 protected:
     ElementListType children;
-    std::map<int, std::vector<std::pair<ElementSizeType, ElementPointer>>> children_map;
+    std::map<int, std::vector<std::pair<ElementSizeType, ElementPointer>>> children_priority_map;
     // The size list of the element calculated by the cache.
     // The size indicates the actual display size of the element, i.e., the size without padding.
     std::vector<Size<ValueType>> size_list;
