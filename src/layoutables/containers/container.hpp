@@ -6,8 +6,10 @@
 #ifndef VPACKCORE_CONTAINER_HPP
 #define VPACKCORE_CONTAINER_HPP
 
+#include <map>
 #include <vector>
-#include <memory>
+#include <utility>
+#include <algorithm>
 
 #include "../layoutable.hpp"
 #include "../../utils/indexed.hpp"
@@ -29,16 +31,39 @@ namespace vpk {
 
 template<typename Identifier, typename ValueType>
 class Container : public Layoutable<Identifier, ValueType> {
+private:
+    using ElementPointer = LayoutablePointer<Identifier, ValueType>;
+    using ElementListType = std::vector<ElementPointer>;
+    using ElementSizeType = typename ElementListType::size_type;
+
 public:
     Container(const std::vector<LayoutablePointer<Identifier, ValueType>>& items, const LayoutParams<ValueType>& params)
         : Layoutable<Identifier, ValueType>(params), children(items) {
         size_list.resize(items.size());
+
+        std::vector<ElementPointer> copied_items = items;
+        std::sort(copied_items.begin(), copied_items.end(), [](const ElementPointer& x, const ElementPointer& y) {
+            return x->params.priority < y->params.priority;
+        });
+
+        optional<int> current_priority = nullopt;
+        typename decltype(children_map)::mapped_type* current_elements_ptr = nullptr;
+        for (auto it: makeIndexed(copied_items)) {
+            const ElementPointer& ptr = it.value();
+            const int priority = ptr->params.priority;
+            if (!current_priority.has_value() || *current_priority != priority) {
+                current_priority = priority;
+                current_elements_ptr = &children_map[priority];
+            }
+            current_elements_ptr->push_back(std::make_pair(it.index(), ptr));
+        }
     }
 
     LayoutType type() const override { return LayoutType::container; }
 
 protected:
-    std::vector<LayoutablePointer<Identifier, ValueType>> children;
+    ElementListType children;
+    std::map<int, std::vector<std::pair<ElementSizeType, ElementPointer>>> children_map;
     // The size list of the element calculated by the cache.
     // The size indicates the actual display size of the element, i.e., the size without padding.
     std::vector<Size<ValueType>> size_list;
