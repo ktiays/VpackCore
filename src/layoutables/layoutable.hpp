@@ -29,6 +29,22 @@ struct LayoutParams {
     SizeProperty<ValueType> size_property;
     EdgeInsets<ValueType> padding;
     Point<ValueType> offset;
+
+    /// The layout priority of the element.
+    ///
+    /// Container will read this value from elements and use the value when deciding how to assign space to elements.
+    /// The default value of this property is 0.
+    int priority{};
+
+    LayoutParams() = default;
+
+    LayoutParams(const SizeProperty<ValueType>& size, const EdgeInsets<ValueType>& insets,
+                 const Point<ValueType>& offset_, int p = 0)
+        : size_property(size), padding(insets), offset(offset_), priority(p) {}
+
+    LayoutParams(SizeProperty<ValueType>&& size, EdgeInsets<ValueType>&& insets,
+                 Point<ValueType>&& offset_, int p = 0)
+        : size_property(std::move(size)), padding(std::move(insets)), offset(std::move(offset_)), priority(p) {}
 };
 
 template<
@@ -63,9 +79,9 @@ public:
 
     virtual ~Layoutable() = default;
 
-protected:
     LayoutParams<ValueType> params;
 
+protected:
     ValueType min_width_;
     ValueType min_height_;
     ValueType max_width_;
