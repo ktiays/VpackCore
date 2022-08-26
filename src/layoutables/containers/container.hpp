@@ -47,8 +47,6 @@ public:
         }
     }
 
-    LayoutType type() const override { return LayoutType::container; }
-
 protected:
     ElementListType children;
     /// A map that sorts the child elements by layout priority.

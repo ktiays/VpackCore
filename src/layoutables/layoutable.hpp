@@ -11,11 +11,6 @@
 
 namespace vpk {
 
-enum class LayoutType {
-    item,
-    container,
-};
-
 template<typename ValueType>
 struct SizeProperty {
     optional<ValueType> min_width;
@@ -56,8 +51,6 @@ class Layoutable {
 public:
     explicit Layoutable(LayoutParams<ValueType> p)
         : params(p) {}
-
-    virtual LayoutType type() const = 0;
 
     virtual void layout(const Rect<ValueType>& frame, LayoutResult<Identifier, ValueType>& result) const = 0;
 

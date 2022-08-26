@@ -37,8 +37,6 @@ public:
 
     Size<ValueType> measure(const Size<ValueType>& size) override;
 
-    LayoutType type() const override { return LayoutType::item; }
-
 private:
     Identifier identifier_;
     std::shared_ptr<Measurable<ValueType>> measurable;
