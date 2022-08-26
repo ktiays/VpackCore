@@ -41,21 +41,9 @@ public:
         : Layoutable<Identifier, ValueType>(params), children(items) {
         size_list.resize(items.size());
 
-        std::vector<ElementPointer> copied_items = items;
-        std::sort(copied_items.begin(), copied_items.end(), [](const ElementPointer& x, const ElementPointer& y) {
-            return x->params.priority < y->params.priority;
-        });
-
-        optional<int> current_priority = nullopt;
-        typename decltype(children_priority_map)::mapped_type* current_elements_ptr = nullptr;
-        for (auto it: makeIndexed(copied_items)) {
+        for (auto it: makeIndexed(items)) {
             const ElementPointer& ptr = it.value();
-            const int priority = ptr->params.priority;
-            if (!current_priority.has_value() || *current_priority != priority) {
-                current_priority = priority;
-                current_elements_ptr = &children_priority_map[priority];
-            }
-            current_elements_ptr->push_back(std::make_pair(it.index(), ptr));
+            children_priority_map[ptr->params.priority].push_back(std::make_pair(it.index(), ptr));
         }
     }
 
@@ -63,7 +51,10 @@ public:
 
 protected:
     ElementListType children;
-    std::map<int, std::vector<std::pair<ElementSizeType, ElementPointer>>> children_priority_map;
+    /// A map that sorts the child elements by layout priority.
+    ///
+    /// The map is sorted in descending order of priority.
+    std::map<int, std::vector<std::pair<ElementSizeType, ElementPointer>>, std::greater<int>> children_priority_map;
     // The size list of the element calculated by the cache.
     // The size indicates the actual display size of the element, i.e., the size without padding.
     std::vector<Size<ValueType>> size_list;

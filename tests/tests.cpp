@@ -144,7 +144,7 @@ TEST(VpackCoreTest, DecoratedContainer) {
     const LayoutResult answer{
         {
             { "Text", {{ 12, 56, 50, 8 }, 2 }},
-            { "Background", {{ 0, 29, 74, 20 }, 1 }},
+            { "Background", {{ 0, 50, 74, 20 }, 1 }},
             { "View", {{ 145, 35, 50, 50 }, 3 }},
             { "Overlay", {{ 135, 25, 70, 70 }, 4 }},
         }, 4
