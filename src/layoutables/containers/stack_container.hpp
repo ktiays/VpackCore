@@ -95,6 +95,8 @@ void StackContainer<Identifier, ValueType>::layout(const Rect<ValueType>& frame,
 template<typename Identifier, typename ValueType>
 Size<ValueType> StackContainer<Identifier, ValueType>::measure(const Size<ValueType>& size) {
     Size<ValueType> measured_size;
+    // The element sizes in `StackContainer` are not affected by each other.
+    // Therefore, priority map is not used here.
     for (auto it: makeIndexed(this->children)) {
         const auto child = it.value();
 

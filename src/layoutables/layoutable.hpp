@@ -39,12 +39,12 @@ struct LayoutParams {
     LayoutParams() = default;
 
     LayoutParams(const SizeProperty<ValueType>& size, const EdgeInsets<ValueType>& insets,
-                 const Point<ValueType>& offset_, int p = 0)
-        : size_property(size), padding(insets), offset(offset_), priority(p) {}
+                 const Point<ValueType>& offset, int priority = 0)
+        : size_property(size), padding(insets), offset(offset), priority(priority) {}
 
     LayoutParams(SizeProperty<ValueType>&& size, EdgeInsets<ValueType>&& insets,
-                 Point<ValueType>&& offset_, int p = 0)
-        : size_property(std::move(size)), padding(std::move(insets)), offset(std::move(offset_)), priority(p) {}
+                 Point<ValueType>&& offset, int priority = 0)
+        : size_property(std::move(size)), padding(std::move(insets)), offset(std::move(offset)), priority(priority) {}
 };
 
 template<

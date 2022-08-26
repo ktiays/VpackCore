@@ -22,7 +22,7 @@ struct Spacer : public SomeView {
                 0, 0, infinity, infinity
             },
             {},
-            {}};
+            {}, -1};
         return std::make_shared<vpk::Item<identifier_t, value_type>>(
             spacer_identifier(),
             params,
