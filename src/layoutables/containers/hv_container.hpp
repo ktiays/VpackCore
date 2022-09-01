@@ -186,7 +186,8 @@ Size<ValueType> HVContainer<Identifier, ValueType>::measure(const Size<ValueType
             this->size_list.at(element_idx) = size_from_axis_size({ main, cross });
             // The padding needs to be taken into account when counting the actual size of the occupancy.
             current_priority_measured_size.main += (main + padding.main());
-            current_priority_measured_size.cross = std::max(measured_size.cross, cross + padding.cross());
+            current_priority_measured_size.cross = std::max(current_priority_measured_size.cross,
+                                                            cross + padding.cross());
         }
         measured_size.main += current_priority_measured_size.main;
         measured_size.cross = std::max(current_priority_measured_size.cross, measured_size.cross);
@@ -216,10 +217,10 @@ void HVContainer<Identifier, ValueType>::layout(const Rect<ValueType>& frame,
     );
 
     ValueType used_main = 0;
-    for (int i = 0; i < this->children.size(); ++i) {
-        const auto child_ptr = this->children[i];
+    for (auto it: makeIndexed(this->children)) {
+        const auto child_ptr = it.value();
 
-        const auto item_size = axis_size_from_size(this->size_list[i]);
+        const auto item_size = axis_size_from_size(this->size_list[it.index()]);
         const auto item_padding = axis_edge_insets_for_element(child_ptr);
         /// The total size of the accommodating elements.
         ///

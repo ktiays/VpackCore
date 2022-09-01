@@ -7,7 +7,9 @@
 #define VPACKCORE_SOME_VIEW_HPP
 
 #include <string>
+#include <random>
 
+#include "uuid.h"
 #include "../../VpackCore.hpp"
 
 #define __IMPL_PADDING_FOR_CONTAINER(container) \
@@ -45,8 +47,14 @@ namespace vpkt {
 
 const double infinity = std::numeric_limits<double>::infinity();
 
-static std::string spacer_identifier() {
+static std::string spacer_identifier_prefix() {
     return "__spacer";
+}
+
+static std::string uuid() {
+    std::random_device rd;
+    std::mt19937 gen{ rd() };
+    return uuids::to_string(uuids::uuid_random_generator{ gen }());
 }
 
 struct SomeView {
@@ -58,8 +66,12 @@ struct SomeView {
     vpk::LayoutResult<identifier_t, value_type> compute(vpk::Rect<value_type>&& frame) const {
         const auto computer = vpk::LayoutComputer<identifier_t, value_type>(make_view());
         auto result = computer.compute(frame);
-        auto iter = result.map.find(spacer_identifier());
-        if (iter != result.map.end()) result.map.erase(iter);
+        auto& map = result.map;
+        for (auto iter = result.map.begin(); iter != result.map.end();) {
+            if (iter->first.find(spacer_identifier_prefix()) != std::string::npos) {
+                iter = result.map.erase(iter);
+            } else { ++iter; }
+        }
         return result;
     };
 };

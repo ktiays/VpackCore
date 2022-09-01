@@ -9,6 +9,7 @@
 #include <version>
 #include <numeric>
 #include <algorithm>
+#include <functional>
 
 #include "../layoutable.hpp"
 
@@ -51,7 +52,7 @@ ValueType calculate_min_max_dimension(const std::vector<LayoutablePointer<Identi
                    });
     switch (policy) {
         case MinMaxPolicy::sum:
-            return std::accumulate(dimensions.begin(), dimensions.end(), 0, std::plus<>());
+            return std::accumulate(dimensions.begin(), dimensions.end(), static_cast<ValueType>(0), std::plus<>());
         case MinMaxPolicy::max: {
             auto iter = std::max_element(dimensions.begin(), dimensions.end());
             if (iter != dimensions.end()) return *iter;

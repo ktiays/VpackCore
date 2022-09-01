@@ -5,5 +5,5 @@ project(vpack_core_tests)
 add_subdirectory(lib)
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
-add_executable(Vpack_Core_Run tests.cpp src/text.hpp src/spacer.hpp)
+add_executable(Vpack_Core_Run tests.cpp src/text.hpp src/spacer.hpp src/uuid.h)
 target_link_libraries(Vpack_Core_Run gtest gtest_main VpackCore)

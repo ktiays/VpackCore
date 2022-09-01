@@ -153,3 +153,53 @@ TEST(VpackCoreTest, DecoratedContainer) {
 
     ASSERT_EQ(result, answer);
 }
+
+TEST(VpackCoreTest, Compose) {
+    using namespace vpkt;
+    const auto result = VStack{
+        {
+            HStack(
+                {
+                    View("Image", { 30, 30 }).make_view(),
+                    VStack{
+                        {
+                            Text("Title", 8).make_view(),
+                            Text("Account ID", 12).make_view(),
+                        }
+                    }.alignment(vpk::HorizontalAlignment::leading)
+                        .make_view(),
+                    HSpacer().make_view(),
+                }
+            ).make_view(),
+            Text("Description", 9).make_view(),
+            HStack{
+                {
+                    VStack(
+                        {
+                            Text("Number", 2).make_view(),
+                            Text("Tag", 4).make_view(),
+                        }
+                    ).make_view(),
+                    HSpacer().make_view(),
+                    View("Button", { 40, 20 }).make_view(),
+                }
+            }.make_view(),
+        }
+    }.padding({ 12, 0, 12, 0 })
+        .alignment(vpk::HorizontalAlignment::leading)
+        .compute({ 0, 0, 100, 100 });
+
+    const LayoutResult answer{
+        {
+            { "Image", {{ 12, 21, 30, 30 }, 0 }},
+            { "Title", {{ 42, 24, 40, 8 }, 0 }},
+            { "Account ID", {{ 42, 32, 45, 16 }, 0 }},
+            { "Description", {{ 12, 51, 45, 8 }, 0 }},
+            { "Number",{{ 17, 61, 10, 8 }, 0 }},
+            { "Tag",{{ 12, 69, 20, 8 }, 0 }},
+            { "Button",{{ 48, 59, 40, 20 }, 0 }},
+        }, 0
+    };
+
+    ASSERT_EQ(result, answer);
+}

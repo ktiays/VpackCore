@@ -30,7 +30,9 @@ public:
 
     T make_view() const override {
         return std::make_shared<vpk::VerticalContainer<identifier_t, value_type>>(
-            items_, vpk::LayoutParams<double>{}, alignment_
+            items_, vpk::LayoutParams<double>{
+                size_property, padding_, offset_
+            }, alignment_
         );
     }
 
