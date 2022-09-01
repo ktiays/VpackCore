@@ -79,6 +79,7 @@ TEST(VpackCoreTest, VerticalContainer) {
                 .make_view(),
             vpkt::View("D", { 100, 40 }).make_view(),
             vpkt::Spacer().make_view(),
+            vpkt::VStack({}).make_view(),
         }
     }.alignment(vpk::HorizontalAlignment::trailing)
         .compute({ 0, 0, 350, 500 });

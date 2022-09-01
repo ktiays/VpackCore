@@ -52,9 +52,11 @@ ValueType calculate_min_max_dimension(const std::vector<LayoutablePointer<Identi
     switch (policy) {
         case MinMaxPolicy::sum:
             return std::accumulate(dimensions.begin(), dimensions.end(), 0, std::plus<>());
-        case MinMaxPolicy::max:
-            return *(std::max_element(dimensions.begin(), dimensions.end()));
-
+        case MinMaxPolicy::max: {
+            auto iter = std::max_element(dimensions.begin(), dimensions.end());
+            if (iter != dimensions.end()) return *iter;
+            else return static_cast<ValueType>(0);
+        }
     }
 }
 
