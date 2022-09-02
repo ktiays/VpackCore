@@ -108,6 +108,8 @@ private:
 
 }
 
+//////////////////////////////// Decorated Stack ////////////////////////////////
+
 namespace vpkt {
 
 template<typename T = decltype(std::declval<SomeView>().make_view())>
