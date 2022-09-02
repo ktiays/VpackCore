@@ -34,12 +34,11 @@ LayoutResult<Identifier, ValueType> LayoutComputer<Identifier, ValueType>::compu
     const EdgeInsets<ValueType> padding = item->padding();
     const Point<ValueType> offset = item->offset();
 
-    const Size<ValueType> size = item->measure(
-        {
-            std::max(static_cast<ValueType>(0), frame.width - padding.horizontal()),
-            std::max(static_cast<ValueType>(0), frame.height - padding.vertical())
-        }
-    );
+    Size<ValueType> size = item->measure(item->preferred_size(
+        { frame.width - padding.horizontal(), frame.height - padding.vertical() }
+    ));
+    size = item->preferred_size(size);
+
     item->layout(Rect<ValueType>{
         (frame.width - size.width) / 2 + padding.left + offset.x,
         (frame.height - size.height) / 2 + padding.top + offset.y,

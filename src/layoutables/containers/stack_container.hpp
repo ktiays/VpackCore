@@ -101,20 +101,10 @@ Size<ValueType> StackContainer<Identifier, ValueType>::measure(const Size<ValueT
         const auto child = it.value();
 
         const EdgeInsets<ValueType> padding = child->padding();
-        /// The size of the container in which the element can actually be used to display content.
-        ///
-        /// The container size is not smaller than the minimum size of the element
-        /// and does not exceed the maximum size of the provided container.
-        const Size<ValueType> item_container_size = {
-            std::max(child->min_width(), std::min(size.width - padding.horizontal(), child->max_width())),
-            std::max(child->min_height(), std::min(size.height - padding.vertical(), child->max_height())),
-        };
 
-        Size<ValueType> item_size = child->measure(item_container_size);
-        item_size = {
-            std::min(std::max(child->min_width(), item_size.width), item_container_size.width),
-            std::min(std::max(child->min_height(), item_size.height), item_container_size.height)
-        };
+        Size<ValueType> item_size = child->preferred_size(child->measure(child->preferred_size(
+            { size.width - padding.horizontal(), size.height - padding.vertical() }
+        )));
         this->size_list.at(it.index()) = item_size;
         measured_size = Size<ValueType>{
             std::max(item_size.width + padding.horizontal(), measured_size.width),

@@ -69,6 +69,27 @@ TEST(VpackCoreTest, HorizontalText) {
     ASSERT_EQ(result, answer);
 }
 
+TEST(VpackCoreTest, TextAndSpacer) {
+    using namespace vpkt;
+    const auto result = HStack{
+        {
+            InfView("Rect").make_view(),
+            Spacer().make_view(),
+            Text("A", 10).make_view(),
+        }
+    }.max_width(90)
+        .compute({ 0, 0, 200, 200 });
+
+    const LayoutResult answer{
+        {
+            { "A", {{ 100, 92, 45, 16 }, 0 }},
+            { "Rect", {{ 55, 0, 45, 200 }, 0 }},
+        }, 0
+    };
+
+    ASSERT_EQ(result, answer);
+}
+
 TEST(VpackCoreTest, VerticalContainer) {
     const auto result = vpkt::VStack{
         {
@@ -78,7 +99,7 @@ TEST(VpackCoreTest, VerticalContainer) {
                 .offset({ 2, 2 })
                 .make_view(),
             vpkt::View("D", { 100, 40 }).make_view(),
-            vpkt::Spacer().make_view(),
+            vpkt::VSpacer().make_view(),
             vpkt::VStack({}).make_view(),
         }
     }.alignment(vpk::HorizontalAlignment::trailing)
@@ -86,10 +107,10 @@ TEST(VpackCoreTest, VerticalContainer) {
 
     const LayoutResult answer{
         {
-            { "A", {{ 250, 0, 100, 40 }, 0 }},
-            { "B", {{ 30, 40, 320, 70 }, 0 }},
-            { "C", {{ 272, 112, 80, 274 }, 0 }},
-            { "D", {{ 250, 384, 100, 40 }, 0 }},
+            { "A", {{ 235, 0, 100, 40 }, 0 }},
+            { "B", {{ 15, 40, 320, 70 }, 0 }},
+            { "C", {{ 257, 112, 80, 274 }, 0 }},
+            { "D", {{ 235, 384, 100, 40 }, 0 }},
         }, 0
     };
 
@@ -195,9 +216,9 @@ TEST(VpackCoreTest, Compose) {
             { "Title", {{ 42, 24, 40, 8 }, 0 }},
             { "Account ID", {{ 42, 32, 45, 16 }, 0 }},
             { "Description", {{ 12, 51, 45, 8 }, 0 }},
-            { "Number",{{ 17, 61, 10, 8 }, 0 }},
-            { "Tag",{{ 12, 69, 20, 8 }, 0 }},
-            { "Button",{{ 48, 59, 40, 20 }, 0 }},
+            { "Number", {{ 17, 61, 10, 8 }, 0 }},
+            { "Tag", {{ 12, 69, 20, 8 }, 0 }},
+            { "Button", {{ 48, 59, 40, 20 }, 0 }},
         }, 0
     };
 

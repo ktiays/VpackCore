@@ -74,6 +74,17 @@ public:
 
     LayoutParams<ValueType> params;
 
+    /// Resizes the specified size to the closest size that the element is suitable for display.
+    ///
+    /// The preferred size is not smaller than the minimum size of the element
+    /// and does not exceed the maximum size of the element.
+    Size<ValueType> preferred_size(const Size<ValueType>& size) const {
+        return {
+            std::max(static_cast<ValueType>(0), std::min(std::max(min_width(), size.width), max_width())),
+            std::max(static_cast<ValueType>(0), std::min(std::max(min_height(), size.height), max_height())),
+        };
+    }
+
 protected:
     ValueType min_width_;
     ValueType min_height_;
