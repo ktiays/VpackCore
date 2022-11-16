@@ -13,21 +13,21 @@
 #include "../../VpackCore.hpp"
 
 #define __IMPL_PADDING_FOR_CONTAINER(container) \
-container& padding(vpk::EdgeInsets<value_type>&& padding) { \
+container& padding(vpk::core::EdgeInsets<value_type>&& padding) { \
     padding_ = padding;                         \
     return *this;                               \
 }
 
 #define __IMPL_OFFSET_FOR_CONTAINER(container) \
-container& offset(vpk::Point<value_type>&& offset) { \
+container& offset(vpk::core::Point<value_type>&& offset) { \
     offset_ = offset;                          \
     return *this;                              \
 }
 
 #define __DECL_LAYOUT_PARAMS \
-vpk::SizeProperty<value_type> size_property; \
-vpk::EdgeInsets<value_type> padding_;        \
-vpk::Point<value_type> offset_
+vpk::core::SizeProperty<value_type> size_property; \
+vpk::core::EdgeInsets<value_type> padding_;        \
+vpk::core::Point<value_type> offset_
 
 #define __IMPL_SIZE_FOR_CONTAINER(property, container) \
 container& property(value_type&& property) {           \
@@ -61,10 +61,10 @@ struct SomeView {
     using identifier_t = std::string;
     using value_type = double;
 
-    virtual vpk::LayoutablePointer<identifier_t, value_type> make_view() const = 0;
+    virtual vpk::core::LayoutablePointer<identifier_t, value_type> make_view() const = 0;
 
-    vpk::LayoutResult<identifier_t, value_type> compute(vpk::Rect<value_type>&& frame) const {
-        const auto computer = vpk::LayoutComputer<identifier_t, value_type>(make_view());
+    vpk::core::LayoutResult<identifier_t, value_type> compute(vpk::core::Rect<value_type>&& frame) const {
+        const auto computer = vpk::core::LayoutComputer<identifier_t, value_type>(make_view());
         auto result = computer.compute(frame);
         auto& map = result.map;
         for (auto iter = result.map.begin(); iter != result.map.end();) {

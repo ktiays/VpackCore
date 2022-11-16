@@ -11,7 +11,7 @@
 #include "layoutable.hpp"
 #include "measurable.hpp"
 
-namespace vpk {
+namespace vpk::core {
 
 template<typename Identifier, typename ValueType>
 class Item : public Layoutable<Identifier, ValueType> {

@@ -10,7 +10,7 @@
 #include <limits>
 #include <cmath>
 
-namespace vpk::detail {
+namespace vpk::core::detail {
 
 template<typename T>
 T almost_equal(T x, T y) {
@@ -26,7 +26,7 @@ T almost_equal(T x, T y) {
 
 //////////////////////////////// Point ////////////////////////////////
 
-namespace vpk {
+namespace vpk::core {
 
 template<typename ValueType>
 class Point {
@@ -50,7 +50,7 @@ inline Point<ValueType>::Point(ValueType x, ValueType y)
 
 //////////////////////////////// Size ////////////////////////////////
 
-namespace vpk {
+namespace vpk::core {
 
 template<typename ValueType>
 class Size {
@@ -159,7 +159,7 @@ bool operator !=(const Size<ValueType>& a, const Size<ValueType>& b) {
 
 //////////////////////////////// Rect ////////////////////////////////
 
-namespace vpk {
+namespace vpk::core {
 
 template<typename ValueType>
 class Rect {
@@ -342,7 +342,7 @@ Rect<ValueType> operator -(const Rect<ValueType>& a, const Size<ValueType>& b) {
 
 //////////////////////////////// Alignment ////////////////////////////////
 
-namespace vpk {
+namespace vpk::core {
 
 enum class HorizontalAlignment {
     center,
@@ -394,7 +394,7 @@ static inline Alignment operator |(const HorizontalAlignment& h, const VerticalA
 
 //////////////////////////////// Edge Insets ////////////////////////////////
 
-namespace vpk {
+namespace vpk::core {
 
 template<typename ValueType>
 class EdgeInsets {

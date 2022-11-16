@@ -8,7 +8,7 @@
 
 #include "stack_container.hpp"
 
-namespace vpk {
+namespace vpk::core {
 
 enum class DecoratedStyle {
     background,

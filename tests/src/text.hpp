@@ -21,20 +21,20 @@ public:
 
     __IMPL_OFFSET_FOR_CONTAINER(Text)
 
-    static constexpr vpk::Size<value_type> character_size() {
+    static constexpr vpk::core::Size<value_type> character_size() {
         return { 5, 8 };
     }
 
-    vpk::LayoutablePointer<identifier_t, value_type> make_view() const override {
-        const vpk::LayoutParams<value_type> params{
+    vpk::core::LayoutablePointer<identifier_t, value_type> make_view() const override {
+        const vpk::core::LayoutParams<value_type> params{
             { character_size().width, character_size().height,
               character_size().width * text_length_, character_size().height * text_length_ },
             padding_, offset_ };
-        return std::make_shared<vpk::Item<identifier_t, value_type>>(
+        return std::make_shared<vpk::core::Item<identifier_t, value_type>>(
             identifier_,
             params,
-            std::make_shared<vpk::AnyMeasurable<value_type>>(
-                [this](const vpk::Size<value_type>& size) -> vpk::Size<value_type> {
+            std::make_shared<vpk::core::AnyMeasurable<value_type>>(
+                [this](const vpk::core::Size<value_type>& size) -> vpk::core::Size<value_type> {
                     const int number_of_char_in_line =
                         std::max(1, static_cast<int>(size.width) / static_cast<int>(character_size().width));
                     if (number_of_char_in_line >= this->text_length_)
@@ -51,8 +51,8 @@ public:
 private:
     identifier_t identifier_;
     int text_length_;
-    vpk::EdgeInsets<value_type> padding_;
-    vpk::Point<value_type> offset_;
+    vpk::core::EdgeInsets<value_type> padding_;
+    vpk::core::Point<value_type> offset_;
 };
 
 }

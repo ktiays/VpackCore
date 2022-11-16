@@ -11,7 +11,7 @@
 #include "hv_container.hpp"
 #include "../../types.hpp"
 
-namespace vpk {
+namespace vpk::core {
 
 template<typename Identifier, typename ValueType>
 class HorizontalContainer : public detail::HVContainer<Identifier, ValueType> {

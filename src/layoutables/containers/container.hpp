@@ -27,7 +27,7 @@ __DEAL_MIN_WIDTH_ELSE(property) calculate_min_max_dimension<SizeExtractor::prope
 #define __DEAL_MIN_HEIGHT_FOR_POLICY(policy) __DEAL_SIZE_FOR_POLICY_WITH_PROPERTY(min_height, policy)
 #define __DEAL_MAX_HEIGHT_FOR_POLICY(policy) __DEAL_SIZE_FOR_POLICY_WITH_PROPERTY(max_height, policy)
 
-namespace vpk {
+namespace vpk::core {
 
 template<typename Identifier, typename ValueType>
 class Container : public Layoutable<Identifier, ValueType> {

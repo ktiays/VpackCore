@@ -9,7 +9,7 @@
 #include "../layout_result.hpp"
 #include "../types.hpp"
 
-namespace vpk {
+namespace vpk::core {
 
 template<typename ValueType>
 struct SizeProperty {

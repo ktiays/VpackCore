@@ -8,7 +8,7 @@
 
 #include "container.hpp"
 
-namespace vpk::detail {
+namespace vpk::core::detail {
 
 enum class AxisAlignment {
     start,
@@ -59,10 +59,10 @@ struct AxisEdgeInsets {
 };
 
 template<typename Identifier, typename ValueType>
-struct HVContainer : public vpk::Container<Identifier, ValueType> {
+struct HVContainer : public vpk::core::Container<Identifier, ValueType> {
     HVContainer(const std::vector<LayoutablePointer<Identifier, ValueType>>& items,
                 const LayoutParams<ValueType>& params)
-        : vpk::Container<Identifier, ValueType>(items, params) {}
+        : vpk::core::Container<Identifier, ValueType>(items, params) {}
 
 protected:
     using Element = LayoutablePointer<Identifier, ValueType>;

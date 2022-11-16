@@ -13,7 +13,7 @@
 
 #include "../layoutable.hpp"
 
-namespace vpk {
+namespace vpk::core {
 
 enum class MinMaxPolicy {
     sum,

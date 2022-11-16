@@ -5,7 +5,7 @@
 
 #include "types.hpp"
 
-namespace vpk {
+namespace vpk::core {
 
 Alignment Alignment::top_leading = { VerticalAlignment::top, HorizontalAlignment::leading };
 Alignment Alignment::top_center = { VerticalAlignment::top, HorizontalAlignment::center };

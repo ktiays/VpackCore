@@ -8,7 +8,7 @@
 
 #include "../types.hpp"
 
-namespace vpk {
+namespace vpk::core {
 
 template<typename ValueType>
 class Measurable {

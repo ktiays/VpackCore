@@ -19,9 +19,9 @@ template<typename T = decltype(std::declval<SomeView>().make_view())>
 class VStack : public SomeView {
 public:
     VStack(std::vector<T>&& v)
-        : items_(std::move(v)), alignment_(vpk::HorizontalAlignment::center) {}
+        : items_(std::move(v)), alignment_(vpk::core::HorizontalAlignment::center) {}
 
-    VStack& alignment(vpk::HorizontalAlignment align) {
+    VStack& alignment(vpk::core::HorizontalAlignment align) {
         alignment_ = align;
         return *this;
     }
@@ -29,8 +29,8 @@ public:
     __IMPL_LAYOUT_PARAMS_FOR_CONTAINER(VStack)
 
     T make_view() const override {
-        return std::make_shared<vpk::VerticalContainer<identifier_t, value_type>>(
-            items_, vpk::LayoutParams<double>{
+        return std::make_shared<vpk::core::VerticalContainer<identifier_t, value_type>>(
+            items_, vpk::core::LayoutParams<double>{
                 size_property, padding_, offset_
             }, alignment_
         );
@@ -38,7 +38,7 @@ public:
 
 private:
     std::vector<T> items_;
-    vpk::HorizontalAlignment alignment_;
+    vpk::core::HorizontalAlignment alignment_;
     __DECL_LAYOUT_PARAMS;
 };
 
@@ -52,9 +52,9 @@ template<typename T = decltype(std::declval<SomeView>().make_view())>
 class HStack : public SomeView {
 public:
     HStack(std::vector<T>&& v)
-        : items_(std::move(v)), alignment_(vpk::VerticalAlignment::center) {}
+        : items_(std::move(v)), alignment_(vpk::core::VerticalAlignment::center) {}
 
-    HStack& alignment(vpk::VerticalAlignment align) {
+    HStack& alignment(vpk::core::VerticalAlignment align) {
         alignment_ = align;
         return *this;
     }
@@ -62,8 +62,8 @@ public:
     __IMPL_LAYOUT_PARAMS_FOR_CONTAINER(HStack)
 
     T make_view() const override {
-        return std::make_shared<vpk::HorizontalContainer<identifier_t, value_type>>(
-            items_, vpk::LayoutParams<double>{
+        return std::make_shared<vpk::core::HorizontalContainer<identifier_t, value_type>>(
+            items_, vpk::core::LayoutParams<double>{
                 size_property, padding_, offset_
             }, alignment_
         );
@@ -71,7 +71,7 @@ public:
 
 private:
     std::vector<T> items_;
-    vpk::VerticalAlignment alignment_;
+    vpk::core::VerticalAlignment alignment_;
     __DECL_LAYOUT_PARAMS;
 };
 
@@ -85,9 +85,9 @@ template<typename T = decltype(std::declval<SomeView>().make_view())>
 class ZStack : public SomeView {
 public:
     ZStack(std::vector<T>&& v)
-        : items_(std::move(v)), alignment_(vpk::Alignment::center) {}
+        : items_(std::move(v)), alignment_(vpk::core::Alignment::center) {}
 
-    ZStack& alignment(vpk::Alignment align) {
+    ZStack& alignment(vpk::core::Alignment align) {
         alignment_ = align;
         return *this;
     }
@@ -95,14 +95,14 @@ public:
     __IMPL_LAYOUT_PARAMS_FOR_CONTAINER(ZStack)
 
     T make_view() const override {
-        return std::make_shared<vpk::StackContainer<identifier_t, value_type>>(
-            items_, vpk::LayoutParams<double>{}, alignment_
+        return std::make_shared<vpk::core::StackContainer<identifier_t, value_type>>(
+            items_, vpk::core::LayoutParams<double>{}, alignment_
         );
     }
 
 private:
     std::vector<T> items_;
-    vpk::Alignment alignment_;
+    vpk::core::Alignment alignment_;
     __DECL_LAYOUT_PARAMS;
 };
 
@@ -115,20 +115,20 @@ namespace vpkt {
 template<typename T = decltype(std::declval<SomeView>().make_view())>
 class DStack : public SomeView {
 public:
-    DStack(std::vector<T>&& v, vpk::DecoratedStyle style)
+    DStack(std::vector<T>&& v, vpk::core::DecoratedStyle style)
         : items_(v), style_(style) {}
 
     __IMPL_LAYOUT_PARAMS_FOR_CONTAINER(DStack)
 
     T make_view() const override {
-        return std::make_shared<vpk::DecoratedContainer<identifier_t, value_type>>(
-            items_, vpk::LayoutParams<double>{}, style_
+        return std::make_shared<vpk::core::DecoratedContainer<identifier_t, value_type>>(
+            items_, vpk::core::LayoutParams<double>{}, style_
         );
     }
 
 private:
     std::vector<T> items_;
-    vpk::DecoratedStyle style_;
+    vpk::core::DecoratedStyle style_;
     __DECL_LAYOUT_PARAMS;
 };
 

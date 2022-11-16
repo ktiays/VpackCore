@@ -14,7 +14,7 @@
 
 using Identifier = vpkt::SomeView::identifier_t;
 using ValueType = vpkt::SomeView::value_type;
-using LayoutResult = vpk::LayoutResult<Identifier, ValueType>;
+using LayoutResult = vpk::core::LayoutResult<Identifier, ValueType>;
 
 TEST(VpackCoreTest, HorizontalContainer) {
     const auto result = vpkt::HStack{
@@ -56,7 +56,7 @@ TEST(VpackCoreTest, HorizontalText) {
             vpkt::Text("A", 10).make_view(),
             vpkt::Text("B", 40).make_view(),
         }
-    }.alignment(vpk::VerticalAlignment::top)
+    }.alignment(vpk::core::VerticalAlignment::top)
         .compute({ 0, 0, 200, 200 });
 
     const LayoutResult answer{
@@ -102,7 +102,7 @@ TEST(VpackCoreTest, VerticalContainer) {
             vpkt::VSpacer().make_view(),
             vpkt::VStack({}).make_view(),
         }
-    }.alignment(vpk::HorizontalAlignment::trailing)
+    }.alignment(vpk::core::HorizontalAlignment::trailing)
         .compute({ 0, 0, 350, 500 });
 
     const LayoutResult answer{
@@ -150,7 +150,7 @@ TEST(VpackCoreTest, DecoratedContainer) {
                     vpkt::Text("Text", 10)
                         .padding({ 12, 6, 12, 6 })
                         .make_view(),
-                }, vpk::DecoratedStyle::background).make_view(),
+                }, vpk::core::DecoratedStyle::background).make_view(),
             vpkt::Spacer().make_view(),
             vpkt::DStack(
                 {
@@ -158,7 +158,7 @@ TEST(VpackCoreTest, DecoratedContainer) {
                         .padding({ 5, 5, 5, 5 })
                         .make_view(),
                     vpkt::View("Overlay", { 70, 70 }).make_view(),
-                }, vpk::DecoratedStyle::overlay
+                }, vpk::core::DecoratedStyle::overlay
             ).make_view(),
         }
     ).compute({ 0, 0, 200, 120 });
@@ -187,7 +187,7 @@ TEST(VpackCoreTest, Compose) {
                             Text("Title", 8).make_view(),
                             Text("Account ID", 12).make_view(),
                         }
-                    }.alignment(vpk::HorizontalAlignment::leading)
+                    }.alignment(vpk::core::HorizontalAlignment::leading)
                         .make_view(),
                     HSpacer().make_view(),
                 }
@@ -207,7 +207,7 @@ TEST(VpackCoreTest, Compose) {
             }.make_view(),
         }
     }.padding({ 12, 0, 12, 0 })
-        .alignment(vpk::HorizontalAlignment::leading)
+        .alignment(vpk::core::HorizontalAlignment::leading)
         .compute({ 0, 0, 100, 100 });
 
     const LayoutResult answer{

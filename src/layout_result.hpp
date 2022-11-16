@@ -11,7 +11,7 @@
 #include "types.hpp"
 #include "optional.hpp"
 
-namespace vpk {
+namespace vpk::core {
 
 template<typename ValueType>
 struct LayoutAttributes {

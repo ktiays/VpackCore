@@ -12,7 +12,7 @@
 #include "../../types.hpp"
 #include "../../utils/indexed.hpp"
 
-namespace vpk {
+namespace vpk::core {
 
 template<typename Identifier, typename ValueType>
 class StackContainer : public Container<Identifier, ValueType> {

@@ -10,7 +10,7 @@
 
 #include "layoutables/layoutable.hpp"
 
-namespace vpk {
+namespace vpk::core {
 
 template<typename Identifier, typename ValueType>
 class LayoutComputer {
